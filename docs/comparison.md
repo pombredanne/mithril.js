@@ -1,12 +1,12 @@
 ## How is Mithril Different from Other Frameworks
 
-There are a lot of different Javascript MVC frameworks and evaluating their merits and shortcomings can be a daunting task.
+There are a lot of different Javascript frameworks and evaluating their merits and shortcomings can be a daunting task.
 
 This page aims to provide a comparison between Mithril and some of the most widely used frameworks, as well as some of the younger, but relevant ones.
 
 ### Code Size
 
-One of the most obvious differences between Mithril and most frameworks is in file size: Mithril is around 5kb gzipped and has no dependencies on other libraries.
+One of the most obvious differences between Mithril and most frameworks is in file size: Mithril is around 7kb gzipped and has no dependencies on other libraries.
 
 Note that while a small gzipped size can look appealing, that number is often used to "hide the weight" of the uncompressed code: remember that the decompressed Javascript still needs to be parsed and evaluated on every page load, and this cost (which can be in the dozens of milliseconds range for some frameworks in some browsers) cannot be cached.
 
@@ -48,7 +48,7 @@ Some of the older frameworks among the popular ones (out-of-the-box jQuery and B
 
 This can get noticeably bulky when you look at thing like collections: you often need to implement insertion code and deletion code, in addition to a "draw everything" routine for performance. And this is for every list that needs to be displayed in some way.
 
-Mithril's view layer paradigm is designed be **declarative**, much like HTML, such that the same code implicitly does everything it needs to. As it turns out, this design decision is actually a compromise: it offers the benefit of decreased application code complexity at the cost of some performance loss. However, as the performance tests in the homepage show, this does not necessarily hurt Mithril in a meaningful way.
+Mithril's view layer paradigm is designed to be **declarative**, much like HTML, such that the same code implicitly does everything it needs to. As it turns out, this design decision is actually a compromise: it offers the benefit of decreased application code complexity at the cost of some performance loss. However, as the performance tests in the homepage show, this does not necessarily hurt Mithril in a meaningful way.
 
 ---
 
@@ -104,7 +104,7 @@ Ember is also more opinionated in terms of how application architecture should l
 
 ### React
 
-React is a templating engine developed by Facebook. It's relevant for comparison because it uses the same architecture as Mithril's templating engine: i.e. it acknowledges that DOM operations are the bottleneck of templating systems, and implements a virtual DOM tree which keeps track of changes and only applies diffs to the real DOM where needed.
+React is a component engine developed by Facebook. It's relevant for comparison because it uses the same architecture as Mithril's templating engine: i.e. it acknowledges that DOM operations are the bottleneck of templating systems, and implements a virtual DOM tree which keeps track of changes and only applies diffs to the real DOM where needed.
 
 The most visible difference between React and Mithril is that React's *JSX* syntax does not run natively in the browser, whereas Mithril's uncompiled templates do. Both can be compiled, but React's compiled code still has function calls for each virtual DOM element; Mithril templates compile into static Javascript data structures.
 
@@ -117,8 +117,6 @@ Note also that, despite having a bigger scope, Mithril has a smaller file size t
 Knockout is a library focused on data binding. It is not an MVC framework in the traditional sense, but idiomatic Knockout code uses the similar concept of view models.
 
 A Knockout view model is an amalgamation of model and controller layers in a single class. In contrast, Mithril separates the two layers more distinctly.
-
-Generally speaking, Knockout applications tend to be more tightly coupled than Mithril since Knockout doesn't provide an equivalent to Mithril's modules and components.
 
 As with Angular, Knockout templates are written in HTML, and therefore have the same pros and cons as Angular templates.
 

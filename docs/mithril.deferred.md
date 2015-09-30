@@ -163,7 +163,7 @@ The other side of the coin is still supported: if a developer needs to signal an
 var error = m.prop()
 m.request({method: "GET", url: "/user/:id", data: {id: 1}})
 	.then(function(user) {
-		if (user.isAdmin) throw new Error("Sorry, you don't have permissions")
+		if (!user.isAdmin) throw new Error("Sorry, you don't have permissions")
 	})
 	.then(null, error) //handle the application error: bind to a getter-setter for diplaying it on the template
 ```
@@ -201,7 +201,7 @@ Deferred deferred() {void onerror(Error e)}
 
 where:
 	Deferred :: Object { Promise promise, void resolve(any value), void reject(any value) }
-	Promise :: GetterSetter { Promise then(any successCallback(any value), any errorCallback(any value)) }
+	Promise :: GetterSetter { Promise then(any successCallback(any value), any errorCallback(any value)), Promise catch(any errorCallback(any value)) }
 	GetterSetter :: any getterSetter([any value])
 ```
 
@@ -212,6 +212,8 @@ where:
 	The `then` method returns another promise whose computations (if any) receive their inputs from the parent promise's computation.
 
 	A promise is also a getter-setter (see [`m.prop`](mithril.prop.md)). After a call to either `resolve` or `reject`, it holds the result of the parent's computation (or the `resolve`/`reject` value, if the promise has no parent promises)
+	
+	Promises also have a method called `catch`, which is equivalent to calling `then(null, errorCallback)`
 
 	-	**Promise then([any successCallback(any value) [, any errorCallback(any value)]])**
 
@@ -223,7 +225,7 @@ where:
 
 			The default value (if this parameter is falsy) is the identity function `function(value) {return value}`
 
-			If this function returns undefined, then it passes the `value` argument to the next step in the thennable queue, if any
+			If this function returns undefined, then it passes the `value` argument to the next step in the thenable queue, if any
 
 		-	**any errorCallback(any value)** (optional)
 
@@ -231,7 +233,7 @@ where:
 
 			The default value (if this parameter is falsy) is the identity function `function(value) {return value}`
 
-			If this function returns undefined, then it passes the `value` argument to the next step in the thennable queue, if any
+			If this function returns undefined, then it passes the `value` argument to the next step in the thenable queue, if any
 
 		-	**returns Promise promise**
 

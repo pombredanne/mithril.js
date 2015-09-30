@@ -1,8 +1,8 @@
 ## Web Services
 
-Mithril provides a high-level utility for working with web services, which allows writing asynchronous code relatively procedurally.
+Mithril allows writing asynchronous code in a procedural way through a high-level utility for working with web services.
 
-It provides a number of useful features out of the box:
+This utility provides a number of useful features out of the box:
 
 -	The ability to get an early reference to a container that will hold the asynchronous response
 -	The ability to queue operations to be performed after the asynchronous request completes
@@ -27,7 +27,7 @@ var users = m.request({method: "GET", url: "/user"});
 
 Note that this getter-setter holds an *undefined* value until the AJAX request completes. Attempting to unwrap its value early will likely result in errors.
 
-The returned getter-setter also implements the [promise](mithril.deferred.md) interface (also known as a *thennable*): this is the mechanism you should always use to queue operations to be performed on the data from the web service.
+The returned getter-setter also implements the [promise](mithril.deferred.md) interface (also known as a *thenable*): this is the mechanism you should always use to queue operations to be performed on the data from the web service.
 
 The simplest use case of this feature is to implement functional value assignment via `m.prop` (i.e. the same thing as above). You can bind a pre-existing getter-setter by passing it in as a parameter to a `.then` method:
 
@@ -49,9 +49,9 @@ var doSomething = function() { /*...*/ }
 m.request({method: "GET", url: "/user"}).then(users).then(doSomething)
 ```
 
-While both basic assignment syntax and thennable syntax can be used to the same effect, typically it's recommended that you use the assignment syntax in the first example whenever possible, as it's easier to read.
+While both basic assignment syntax and thenable syntax can be used to the same effect, typically it's recommended that you use the assignment syntax in the first example whenever possible, as it's easier to read.
 
-The thennable mechanism is intended to be used in three ways:
+The thenable mechanism is intended to be used in three ways:
 
 -	In the model layer: to process web service data in transformative ways (e.g. filtering a list based on a parameter that the web service doesn't support)
 -	In the controller layer: to bind redirection code upon a condition
@@ -75,7 +75,7 @@ User.listEven = function() {
 
 //controller
 var controller = function() {
-	this.users = User.listEven()
+	return {users: User.listEven()}
 }
 ```
 
@@ -88,15 +88,17 @@ In the example below, we use the previously defined `listEven` model method and 
 ```javascript
 //controller
 var controller = function() {
-	this.users = User.listEven().then(function(users) {
-		if (users.length == 0) m.route("/add");
-	})
+	return {
+		users: User.listEven().then(function(users) {
+			if (users.length == 0) m.route("/add");
+		})
+	}
 }
 ```
 
 #### Binding errors
 
-Mithril thennables take two functions as optional parameters: the first parameter is called if the web service request completes successfully. The second parameter is called if it completes with an error.
+Mithril thenables take two functions as optional parameters: the first parameter is called if the web service request completes successfully. The second parameter is called if it completes with an error.
 
 Error binding is meant to be done in the controller layer. Doing it in the model level is also possible, but generally leads to more code in order to connect all the dots.
 

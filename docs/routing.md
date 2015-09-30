@@ -14,7 +14,7 @@ Mithril provides utilities to handle three different aspect of routing:
 
 ### Defining routes
 
-To define a list of routes, you need to specify a host DOM element, a default route and a key-value map of possible routes and respective [modules](mithril.module.md) to be rendered.
+To define a list of routes, you need to specify a host DOM element, a default route and a key-value map of possible routes and respective [modules](mithril.mount.md) to be rendered. Note: `module` was renamed to `mount`. Documentation will be updated soon.
 
 The example below defines three routes, to be rendered in `<body>`. `home`, `login` and `dashboard` are modules. We'll see how to define a module in a bit.
 
@@ -34,7 +34,7 @@ The example below shows a route that takes a `userID` parameter.
 //a sample module
 var dashboard = {
 	controller: function() {
-		this.id = m.route.param("userID");
+		return {id: m.route.param("userID")};
 	},
 	view: function(controller) {
 		return m("div", controller.id);
@@ -58,11 +58,11 @@ This redirects to the URL `http://server/#/dashboard/johndoe` and yields:
 
 Above, `dashboard` is a module. It contains `controller` and `view` properties. When the URL matches a route, the respective module's controller is instantiated and passed as a parameter to the view.
 
-In this case, since there's only one route, the app redirects to the default route `"/dashboard/johndoe"` and, under the hood, it calls `m.module(document.body, dashboard)`.
+In this case, since there's only one route, the app redirects to the default route `"/dashboard/johndoe"` and, under the hood, it calls `m.mount(document.body, dashboard)`.
 
 The string `johndoe` is bound to the `:userID` parameter, which can be retrieved programmatically in the controller via `m.route.param("userID")`.
 
-The `m.route.mode` property defines which URL portion is used to implement the routing mechanism. Its value can be set to either "search", "hash" or "pathname". The default value is "search".
+The `m.route.mode` property defines which URL portion is used to implement the routing mechanism. It should be set before any calls to `m.route`.  Its value can be set to either "search", "hash" or "pathname". The default value is "search".
 
 -	`search` mode uses the querystring. This allows named anchors (i.e. `<a href="#top">Back to top</a>`, `<a name="top"></a>`) to work on the page, but routing changes causes page refreshes in IE8, due to its lack of support for `history.pushState`.
 
@@ -105,3 +105,9 @@ m("a[href='/dashboard/alicesmith']", {config: m.route});
 This makes the href behave correctly regardless of which `m.route.mode` is selected. It's a good practice to always use the idiom above, instead of hardcoding `?` or `#` in the href attribute.
 
 See [`m()`](mithril.md) for more information on virtual elements.
+
+---
+
+### Redrawing semantics of routing
+
+By default, changing routes causes templates to be re-rendered from scratch. This behavior can be changed either via the [retain flag in a config's context object](mithril.md#persisting-dom-elements-across-route-changes), or the [`m.redraw.strategy("diff")` hint](mithril.redraw.md#changing-redraw-strategy).

@@ -60,7 +60,7 @@ Then, to use Mithril, point a script tag to the downloaded file:
 
 ### Bower
 
-[Bower](http://bower.io) is a package manager for [NodeJS](http://nodejs.org/). If you're using NodeJS already or planning on using [Grunt](http://gruntjs.com/) to create a build system, you can use Bower to conveniently keep up-to-date with Mithril versions.
+[Bower](http://bower.io) is a frontend package manager built in [NodeJS](http://nodejs.org/). If you're using NodeJS already or planning on using [Grunt](http://gruntjs.com/) to create a build system, you can use Bower to conveniently keep up-to-date with Mithril versions.
 
 Assuming you have NodeJS installed, you can install Bower by typing this in the command line:
 
@@ -84,7 +84,7 @@ Then, to use Mithril, point a script tag to the downloaded file:
 
 ### Component
 
-[Component](http://component.io) is another package manager for [NodeJS](http://nodejs.org/). If you're using NodeJS already or planning on using [Grunt](http://gruntjs.com/) to create a build system, you can use Component to conveniently keep up-to-date with Mithril versions.
+[Component](http://component.github.io) is another package manager for [NodeJS](http://nodejs.org/). If you're using NodeJS already or planning on using [Grunt](http://gruntjs.com/) to create a build system, you can use Component to conveniently keep up-to-date with Mithril versions.
 
 Assuming you have NodeJS installed, you can install Component by typing this in the command line:
 
@@ -120,10 +120,17 @@ It includes support for the [MSX](https://github.com/insin/msx) HTML templating 
 
 You can also fork the latest stable project [directly from Github](https://github.com/lhorie/mithril).
 
-If you want to use the bleeding edge version, you can [fork the development repository](https://github.com/lhorie/mithril).
-
-Note that Mithril uses the `next` branch as the stable branch, instead of `master`, because contributors usually use `master` for pull requests. Therefore, the `master` branch should be considered unstable, and should not be used.
+If you want to use the bleeding edge version, you can [fork the development repository](https://github.com/lhorie/mithril.js).
 
 Be aware that even though Mithril has tests running in a continuous integration environment, the bleeding edge version might occasionally break. If you're interested in helping improve Mithril, you're welcome to use the bleeding edge version and report any bugs that you find.
 
 In order to update a forked version of Mithril, [follow the instructions on this page](https://help.github.com/articles/syncing-a-fork).
+
+#### Using bleeding edge from NPM
+
+To use the bleeding edge version from npm, use the following command:
+
+```
+npm install git://github.com/lhorie/mithril.js#next --save
+```
+

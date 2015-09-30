@@ -10,11 +10,14 @@
 - [Casting the Response Data to a Class](#casting-the-response-data-to-a-class)
 - [Unwrapping Response Data](#unwrapping-response-data)
 - [Using Different Data Transfer Formats](#using-different-data-transfer-formats)
+- [File uploads with FormData](#file-uploads-with-formdata)
 - [Using variable data formats](#using-variable-data-formats)
 - [Extracting Metadata from the Response](#extracting-metadata-from-the-response)
 - [Custom request rejections](#custom-request-rejections)
 - [Configuring the underlying XMLHttpRequest](#configuring-the-underlying-xmlhttprequest)
 - [Aborting a request](#aborting-a-request)
+- [Using JSON-P](#using-json-p)
+- [Rendering before web service requests finish](#rendering-before-web-service-requests-finish)
 - [Signature](#signature)
 
 ---
@@ -96,7 +99,7 @@ User.listEven = function() {
 
 //controller
 var controller = function() {
-	this.users = User.listEven()
+	return {users: User.listEven()}
 }
 ```
 
@@ -109,9 +112,11 @@ In the example below, we use the previously defined `listEven` model method and 
 ```javascript
 //controller
 var controller = function() {
-	this.users = User.listEven().then(function(users) {
-		if (users.length == 0) m.route("/add");
-	})
+	return {
+		users: User.listEven().then(function(users) {
+			if (users.length == 0) m.route("/add");
+		})
+	}
 }
 ```
 
@@ -161,10 +166,11 @@ In the example below, we take advantage of queuing to debug the AJAX response da
 //a FP-friendly console.log
 var log = function(value) {
 	console.log(value)
+	return value
 }
 
 var users = m.request({method: "GET", url: "/user"})
-	.then(log);
+	.then(log)
 	.then(function(users) {
 		//add one more user to the response
 		return users.concat({name: "Jane"})
@@ -252,6 +258,26 @@ var file = m.request({
 
 ---
 
+### File uploads with FormData
+
+To use the HTML5 FormData object as the payload for a request, you need to override the `serialize` option. By default, `serialize` converts an object to JSON, but in the case of a FormData payload, you want to pass the object intact.
+
+```javascript
+//assume the file comes from an HTML5 drag-n-drop event
+var file = e.dataTransfer.files[0]
+
+var data = new FormData();
+data.append("file", file)
+
+m.request({
+	method: "POST",
+	url: "/upload",
+	serialize: function(data) {return data}
+})
+```
+
+---
+
 ### Using variable data formats
 
 By default, Mithril assumes both success and error responses are in JSON format, but some servers may not return JSON responses when returning HTTP error codes (e.g. 404)
@@ -314,7 +340,7 @@ You can read more about the [promise exception monitor here](mithril.deferred.md
 
 The `config` option can be used to arbitrarily configure the native XMLHttpRequest instance and to access properties that would not be accessible otherwise.
 
-The example below show how to configure a request where the server expects requests to have a `Content-Type: application/json` header
+The example below shows how to configure a request where the server expects requests to have a `Content-Type: application/json` header
 
 ```javascript
 var xhrConfig = function(xhr) {
@@ -341,6 +367,55 @@ transport().abort();
 
 ---
 
+### Using JSON-P
+
+To make JSON-P requests, add the `dataType` option instead of `method`. You should not add the `callback` querystring parameter; Mithril already does that internally.
+
+```javascript
+m.request({dataType: "jsonp", url: "/api/User"});
+```
+
+Some services (e.g. Flickr) don't follow the convention of calling the `callback` parameter `callback`. In order to specify the name of the querystring parameter that indicates the callback function, use the `callbackKey` option:
+
+```javascript
+m.request({
+	dataType: "jsonp",
+	callbackKey: "jsoncallback",
+	url: "http://api.flickr.com/services/feeds/photos_public.gne?tags=monkey&tagmode=any&format=json"
+});
+```
+
+---
+
+### Rendering before web service requests finish
+
+By default, Mithril waits for web service requests to complete before attempting a redraw. This ensures that data being accessed in the view isn't nullable as a result of asynchronous data not being available yet.
+
+However, sometimes we do want to be able to redraw before a web service request completes, either because one web service out of many is slow, or because we don't need its response in order to redraw.
+
+Setting the `background` option to `true` prevents a request from affecting redrawing. This means it's possible for a view to attempt to use data before it is available. You can specify an initial value for the `m.request` getter-setter in order to avoid having to write defensive code against potential null reference exceptions:
+
+```javascript
+var demo = {}
+
+demo.controller = function() {
+	return {
+		users: m.request({method: "GET", url: "/api/user", background: true, initialValue: []})
+	}
+}
+
+//in the view
+demo.view = function(ctrl) {
+	//This view gets rendered before the request above completes
+	//Calling .map doesn't throw an error because we defined the initial value to be an empty array, instead of undefined
+	return ctrl.users().map(function(user) {
+		return m("div", user.name)
+	})
+}
+```
+
+---
+
 ### Signature
 
 [How to read signatures](how-to-read-signatures.md)
@@ -359,8 +434,9 @@ where:
 		[String password,]
 		[Object<any> data,]
 		[Boolean background,]
-		[any unwrapSuccess(any data),]
-		[any unwrapError(any data),]
+		[any initialValue,]
+		[any unwrapSuccess(any data, XMLHttpRequest xhr),]
+		[any unwrapError(any data, XMLHttpRequest xhr),]
 		[String serialize(any dataToSerialize),]
 		[any deserialize(String dataToDeserialize),]
 		[any extract(XMLHttpRequest xhr, XHROptions options),]
@@ -395,10 +471,6 @@ where:
 	
 		A password for HTTP authentication. Defaults to `undefined`
 		
-	-	**String password** (optional)
-	
-		A password for HTTP authentication. Defaults to `undefined`
-		
 	-	**Object<any> data** (optional)
 	
 		Data to be sent. It's automatically placed in the appropriate section of the request with the appropriate serialization based on `method`
@@ -407,16 +479,72 @@ where:
 	
 		Determines whether the `m.request` can affect template rendering. Defaults to false.
 		
-		If this option is set to true, then the request does NOT call [`m.startComputation` / `m.endComputation`](mithril.computation.md), and therefore the completion of the request does not trigger an update of the view, even if data has been changed. This option is useful for running operations in the background (i.e. without user intervention).
+		If this option is set to true, then the request does NOT call [`m.startComputation` / `m.endComputation`](mithril.computation.md) internally, and therefore the completion of the request does not trigger an update of the view, even if data has been changed. This option is useful for running operations in the background (i.e. without user intervention).
 		
-		In order to force a redraw after a background request, use [`m.redraw`](mithril.redraw.md)
+		In order to force a redraw after a background request, use [`m.redraw`](mithril.redraw.md), or `m.startComputation` / `m.endComputation`.
 		
 		```javascript
-		m.request({method: "GET", url: "/foo", background: true})
-			.then(m.redraw); //force redraw
+		var demo = {}
+
+		demo.controller = function() {
+			var users = m.request({method: "GET", url: "/api/users", background: true, initialValue: []})
+			users.then(m.redraw)
+			return {users: users}
+		}
+
+		demo.view = function(ctrl) {
+			//this view renders twice (once immediately, and once after the request above completes)
+			return m("div", [
+				ctrl.users().map(function(user) {
+					return m("div", user.name)
+				})
+			])
+		}
 		```
 		
-	-	**any unwrapSuccess(any data)** (optional)
+		It's strongly recommended that you set an `initialValue` option in ALL requests if you set the `background` option to true.
+		
+		When calling multiple background AJAX requests, it's recommended that you use [`m.sync`](mithril.sync.md) to batch redraw once at the end of all requests, as opposed to repeatedly redrawing after every request:
+
+		```javascript
+		var demo = {}
+
+		demo.controller = function() {
+			var users = m.request({method: "GET", url: "/api/users", background: true, initialValue: []})
+			var projects = m.request({method: "GET", url: "/api/projects", background: true, initialValue: []})
+			
+			m.sync([users, projects]).then(m.redraw)
+			
+			return {users: users, projects: projects}
+		}
+		```
+		
+		Make sure to add null checks if your request value can be null
+		
+		```javascript
+		var demo = {}
+
+		demo.controller = function() {
+			var user = m.request({method: "GET", url: "/api/users/1", background: true, initialValue: null})
+			user.then(m.redraw)
+			return {user: user}
+		}
+
+		demo.view = function(ctrl) {
+			return m("div", [
+				//in the first redraw, there's no user, so ensure we don't throw an error
+				ctrl.user ? ctrl.user.name : "no user"
+			])
+		}
+		```
+		
+	-	**any initialValue** (optional)
+	
+		The value that populates the returned getter-setter before the request completes. This is useful when using the `background` option, in order to avoid the need for null checks in views that may be attempting to access the returned getter-setter before the asynchronous request resolves.
+		
+		It is strongly recommended that you always set this option to avoid future surprises.
+		
+	-	**any unwrapSuccess(any data, XMLHttpRequest xhr)** (optional)
 
 		A preprocessor function to unwrap the data from a success response in case the response contains metadata wrapping the data.
 		
@@ -432,7 +560,7 @@ where:
 		
 			The unwrapped data
 
-	-	**any unwrapError(any data)** (optional)
+	-	**any unwrapError(any data, XMLHttpRequest xhr)** (optional)
 
 		A preprocessor function to unwrap the data from an error response in case the response contains metadata wrapping the data.
 		

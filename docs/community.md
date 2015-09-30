@@ -8,6 +8,14 @@ Go to the [Learn Mithril site](http://lhorie.github.io/mithril-blog)
 
 ---
 
+### Gitter
+
+There's a [Gitter chat room](https://gitter.im/lhorie/mithril.js). This is a great place to ask questions, discuss ideas and connect with Mithril users.
+
+You can sign in with your Github credentials. 
+
+---
+
 ### Mailing List
 
 Looking for a place to talk about Mithril? Suggestions?
@@ -24,11 +32,17 @@ Want to help fellow Mithril developers and gain karma while at it? [Keep an eye 
 
 ---
 
-### Projects and Snippets
+### IRC
 
-A collection of projects and snippets created by Mithril users. A great place to find useful tools.
+Join the #mithriljs IRC channel on [Freenode](http://webchat.freenode.net).
 
-Go to the [Mithril wiki](https://github.com/lhorie/mithril.js/wiki/Community-Projects-and-Snippets)
+---
+
+### Github Wiki
+
+A collection of community projects, tutorials, starter kits and snippets created by Mithril users. A great place to find useful tools.
+
+Go to the [Mithril wiki](https://github.com/lhorie/mithril.js/wiki)
 
 ---
 

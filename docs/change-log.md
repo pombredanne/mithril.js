@@ -1,7 +1,181 @@
 ## Change Log
 
-[v0.1.23](/mithril/archive/v0.1.23) - maintenance
+[v0.2.1](http://mithril.js.org/archive/v0.2.1)
 
+### News:
+
+-	added `catch` to promises
+-	improvements and fixes in the documentation and wiki
+-	large refactor to take better advantage of Chrome js optimizations and improve source code readability (thanks to @impinball)
+-	`m(component, ...args)` can now be used as a shorthand for `m.component(component, ...args)`
+
+### Bug Fixes:
+
+-	errors thrown from the exception monitor no longer freeze redrawing
+-	fix edge case with falsy keys
+-	fix controller prototype inheritance in component controllers
+-	fix return value of `parseQueryString` if input is empty string
+
+---
+
+[v0.2.0](http://mithril.js.org/archive/v0.2.0) - improved components
+
+### News:
+
+-	Mithril modules will be referred to as *components* from now on.
+-	Virtual DOM tree can now contain [components](mithril.component.md)
+-	Components can now be parameterized via `m.component`
+
+### Deprecations:
+
+-	`m.module` has been renamed `m.mount`. Calling `m.module` will still work, but should be considered deprecated. Rationale: Mithril modules and components are the same thing, therefore from now on, they will be referred to as components, since that name is more descriptive of their purpose, and causes less confusion in the face of ES6 modules.
+
+	In order to migrate, search for `m.module` calls and replace them with `m.mount`. The method signature is the same.
+
+### Bug Fixes:
+
+-	fix diff edge case in `<select>` [#569](https://github.com/lhorie/mithril.js/issues/569)
+-	fix support for arrays in template compiler
+
+---
+
+[v0.1.34](http://mithril.js.org/archive/v0.1.34) - maintenance
+
+### Bug Fixes:
+
+-	fix identity bug when mixing unkeyable elements in a tree [#524](https://github.com/lhorie/mithril.js/issues/524)
+
+---
+
+[v0.1.33](http://mithril.js.org/archive/v0.1.33) - maintenance
+
+### Bug Fixes:
+
+-	fix diff bug when mixing `undefined` in a tree [#524](https://github.com/lhorie/mithril.js/issues/524)
+-	fix reference to map file in package.json for cdnjs
+-	fix links in documentation
+
+---
+
+[v0.1.32](http://mithril.js.org/archive/v0.1.32) - maintenance
+
+### Bug Fixes:
+
+-	fix regression caused by [#454](https://github.com/lhorie/mithril.js/issues/454)
+
+---
+
+[v0.1.31](http://mithril.js.org/archive/v0.1.31) - maintenance
+
+### News:
+
+-	Typescript definitions are more strongly typed
+-	m.request's `unwrapSuccess` and `unwrapError` callbacks now receive the XMLHttpRequest instance as a second parameter
+-	3rd parameter for `m.route(route, params, shouldReplaceHistory)` is now public
+-	exact routes now have higher precedence than routes w/ variables [#452](https://github.com/lhorie/mithril.js/issues/452)
+-	there's now a `retain` flag to control on-route-change diff strategy on a per-element basis
+
+### Bug Fixes:
+
+-	fix routing bug in IE9 [#320](https://github.com/lhorie/mithril.js/issues/320)
+-	fix ordering bug in m.trust when using HTML entities [#453](https://github.com/lhorie/mithril.js/issues/453)
+-	set promise's default value to initialValue if coming from m.request [#454](https://github.com/lhorie/mithril.js/issues/454)
+-	fix dom element ownership bug when mixing keyed elements and third party plugin elements [#463](https://github.com/lhorie/mithril.js/issues/463)
+-	fix edge case in flatten algorithm [#448](https://github.com/lhorie/mithril.js/issues/448)
+-	prevent unnecessary DOM move operation when mixing keyed and unkeyed elements [#398](https://github.com/lhorie/mithril.js/issues/398)
+-	revert [#382](https://github.com/lhorie/mithril.js/issues/382) due to diff regression [#512](https://github.com/lhorie/mithril.js/issues/512)
+
+---
+
+[v0.1.30](http://mithril.js.org/archive/v0.1.30) - maintenance
+
+### Bug Fixes:
+
+-	fix history.back() regression [#435](https://github.com/lhorie/mithril.js/issues/435)
+-	fix module.view's `this` association regression in Haxe environment [#434](https://github.com/lhorie/mithril.js/issues/434)
+-	fix array serialization syntax in querystrings [#440](https://github.com/lhorie/mithril.js/issues/440)
+
+---
+
+[v0.1.29](http://mithril.js.org/archive/v0.1.29) - maintenance
+
+### News:
+
+-	Calling m.module without a module now unloads the current one [#420](https://github.com/lhorie/mithril.js/issues/420)
+-	Both `controller` and `view` properties in modules are now optional
+
+### Bug Fixes:
+
+-	prevent empty class attributes [#382](https://github.com/lhorie/mithril.js/issues/382)
+-	array-to-querystring serialization in `m.request` now behaves like jQuery [#426](https://github.com/lhorie/mithril.js/issues/426)
+-	fix querystring detection bug in pathname mode [#425](https://github.com/lhorie/mithril.js/issues/425)
+-	don't add history entry if reloading from a link [#428](https://github.com/lhorie/mithril.js/issues/428)
+-	fix key association when DOM order is modified by external code [#424](https://github.com/lhorie/mithril.js/issues/424)
+
+---
+
+[v0.1.28](http://mithril.js.org/archive/v0.1.28) - maintenance
+
+### News:
+
+-	Landed some performance improvements
+
+### Bug Fixes:
+
+-	throw error if root element is null in m.module/m.route [#388](https://github.com/lhorie/mithril.js/issues/388)
+
+---
+
+[v0.1.27](http://mithril.js.org/archive/v0.1.27) - maintenance
+
+### Bug Fixes:
+
+-	prevent strategy("none") event contamination [#378](https://github.com/lhorie/mithril.js/issues/378)
+-	fix equality strictness [#379](https://github.com/lhorie/mithril.js/issues/379)
+-	fix keys bug when list has nulls [#299](https://github.com/lhorie/mithril.js/issues/299)
+-	make sure empty value in option tag creates attribute [#380](https://github.com/lhorie/mithril.js/issues/380)
+
+---
+
+[v0.1.26](http://mithril.js.org/archive/v0.1.26) - maintenance
+
+### Bug Fixes:
+
+-	make sure input[type] is CSS-targetable [#364](https://github.com/lhorie/mithril.js/issues/364)
+-	throw error if m.route.param is called before initializing routes [#361](https://github.com/lhorie/mithril.js/issues/361)
+
+---
+
+[v0.1.25](http://mithril.js.org/archive/v0.1.25) - maintenance
+
+### Bug Fixes:
+
+-	fixed input cursor jumping regression
+-	fixed interop bug when QUnit and AMD are used at the same time [#355](https://github.com/lhorie/mithril.js/issues/355)
+-	fixed route arg duplication in edge case [#352](https://github.com/lhorie/mithril.js/issues/352)
+-	prevented meaningless error in Chrome edge case [#358](https://github.com/lhorie/mithril.js/issues/358)
+
+---
+
+[v0.1.24](http://mithril.js.org/archive/v0.1.24) - maintenance
+
+### Bug Fixes:
+
+-	Prevent rogue `is` attribute from being created in Chrome
+-	Fix `data` regression in `m.request`
+
+---
+
+[v0.1.23](http://mithril.js.org/archive/v0.1.23) - maintenance
+
+### News:
+
+-	There's now support for extended custom elements (e.g. `m("button[is=my-button]")`)
+-	`m.request` now supports a `initialValue` option to help prevent type errors in views when using the `background` option
+
+### Bug Fixes:
+
+-	docs now have anchor links for easier navigation
 -	fixed a bunch of IE8 issues [#298](https://github.com/lhorie/mithril.js/issues/298)
 -	fixed handling of `method` option in JSONP mode [#292](https://github.com/lhorie/mithril.js/issues/292)
 -	fixed source map files
@@ -9,10 +183,11 @@
 -	fixed template compiler edge case [#286](https://github.com/lhorie/mithril.js/issues/286)
 -	fixed pathname bug in m.route [#290](https://github.com/lhorie/mithril.js/issues/290)
 -	fixed pathname querystring bug in routed links [#304](https://github.com/lhorie/mithril.js/issues/304)
+-	fixed handling of value in inputs when model value is not in sync with input value [#336](https://github.com/lhorie/mithril.js/issues/336)
 
 ---
 
-[v0.1.22](/mithril/archive/v0.1.22) - maintenance
+[v0.1.22](http://mithril.js.org/archive/v0.1.22) - maintenance
 
 ### News:
 
@@ -36,7 +211,7 @@
 
 ---
 
-[v0.1.21](/mithril/archive/v0.1.21) - maintenance
+[v0.1.21](http://mithril.js.org/archive/v0.1.21) - maintenance
 
 ### News:
 
@@ -52,7 +227,7 @@
 
 ---
 
-[v0.1.20](/mithril/archive/v0.1.20) - maintenance
+[v0.1.20](http://mithril.js.org/archive/v0.1.20) - maintenance
 
 ### News:
 
@@ -67,7 +242,7 @@
 
 ---
 
-[v0.1.19](/mithril/archive/v0.1.19) - maintenance
+[v0.1.19](http://mithril.js.org/archive/v0.1.19) - maintenance
 
 ### Bug Fixes:
 
@@ -79,7 +254,7 @@
 
 ---
 
-[v0.1.18](/mithril/archive/v0.1.18) - maintenance
+[v0.1.18](http://mithril.js.org/archive/v0.1.18) - maintenance
 
 ### Bug Fixes:
 
@@ -88,7 +263,7 @@
 
 ---
 
-[v0.1.17](/mithril/archive/v0.1.17) - maintenance
+[v0.1.17](http://mithril.js.org/archive/v0.1.17) - maintenance
 
 ### News:
 
@@ -106,7 +281,7 @@
 
 ---
 
-[v0.1.16](/mithril/archive/v0.1.16) - maintenance
+[v0.1.16](http://mithril.js.org/archive/v0.1.16) - maintenance
 
 ### News:
 
@@ -130,7 +305,7 @@
 
 ---
 
-[v0.1.15](/mithril/archive/v0.1.15) - maintenance
+[v0.1.15](http://mithril.js.org/archive/v0.1.15) - maintenance
 
 ### Bug Fixes:
 
@@ -140,7 +315,7 @@
 
 ---
 
-[v0.1.14](/mithril/archive/v0.1.14) - maintenance
+[v0.1.14](http://mithril.js.org/archive/v0.1.14) - maintenance
 
 ### News:
 
@@ -158,7 +333,7 @@
 
 ---
 
-[v0.1.13](/mithril/archive/v0.1.13) - maintenance
+[v0.1.13](http://mithril.js.org/archive/v0.1.13) - maintenance
 
 ### News:
 
@@ -170,7 +345,7 @@
 
 ---
 
-[v0.1.12](/mithril/archive/v0.1.12) - maintenance
+[v0.1.12](http://mithril.js.org/archive/v0.1.12) - maintenance
 
 ### News:
 
@@ -184,7 +359,7 @@
 
 ---
 
-[v0.1.11](/mithril/archive/v0.1.11) - maintenance
+[v0.1.11](http://mithril.js.org/archive/v0.1.11) - maintenance
 
 ### News:
 
@@ -198,7 +373,7 @@
 
 ---
 
-[v0.1.10](/mithril/archive/v0.1.10) - maintenance
+[v0.1.10](http://mithril.js.org/archive/v0.1.10) - maintenance
 
 ### News:
 
@@ -210,7 +385,7 @@
 
 ---
 
-[v0.1.9](/mithril/archive/v0.1.9) - maintenance
+[v0.1.9](http://mithril.js.org/archive/v0.1.9) - maintenance
 
 ### News:
 
@@ -230,7 +405,7 @@
 
 ---
 
-[v0.1.8](/mithril/archive/v0.1.8) - maintenance
+[v0.1.8](http://mithril.js.org/archive/v0.1.8) - maintenance
 
 ### News:
 
@@ -243,7 +418,7 @@
 
 ---
 
-[v0.1.7](/mithril/archive/v0.1.7) - maintenance
+[v0.1.7](http://mithril.js.org/archive/v0.1.7) - maintenance
 
 ### News:
 
@@ -255,7 +430,7 @@
 
 ---
 
-[v0.1.6](/mithril/archive/v0.1.6) - maintenance
+[v0.1.6](http://mithril.js.org/archive/v0.1.6) - maintenance
 
 ### Bug Fixes:
 
@@ -263,7 +438,7 @@
 
 ---
 
-[v0.1.5](/mithril/archive/v0.1.5) - maintenance
+[v0.1.5](http://mithril.js.org/archive/v0.1.5) - maintenance
 
 ### News:
 
@@ -275,7 +450,7 @@
 
 ---
 
-[v0.1.4](/mithril/archive/v0.1.4) - maintenance
+[v0.1.4](http://mithril.js.org/archive/v0.1.4) - maintenance
 
 ### News:
 
@@ -292,7 +467,7 @@
 
 ---
 
-[v0.1.3](/mithril/archive/v0.1.3) - maintenance
+[v0.1.3](http://mithril.js.org/archive/v0.1.3) - maintenance
 
 ### News:
 
@@ -307,7 +482,7 @@
 
 ---
 
-[v0.1.2](/mithril/archive/v0.1.2) - maintenance
+[v0.1.2](http://mithril.js.org/archive/v0.1.2) - maintenance
 
 ### News:
 
@@ -323,11 +498,11 @@
 
 ---
 
-[v0.1.1](/mithril/archive/v0.1.1) - maintenance
+[v0.1.1](http://mithril.js.org/archive/v0.1.1) - maintenance
 
 ### News:
 
--	Mithril is now available at [cdnjs](http://cdnjs.com/libraries/mithril/) and [jsdelivr](http://www.jsdelivr.com/#!mithril)
+-	Mithril is now available at [cdnjs](http://cdnjs.com/librarieshttp://mithril.js.org/) and [jsdelivr](http://www.jsdelivr.com/#!mithril)
 
 ### Bug Fixes:
 
@@ -349,4 +524,4 @@
 
 ---
 
-[v0.1](/mithril/archive/v0.1) - Initial release
+[v0.1](http://mithril.js.org/archive/v0.1) - Initial release

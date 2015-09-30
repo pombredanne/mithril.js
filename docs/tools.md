@@ -57,18 +57,18 @@ You can use it by adding a reference to your Typescript files. This will allow t
 
 ### Internet Explorer Compatibility
 
-Mithril relies on some Ecmascript 5 features, namely: `Array::indexOf`, `Array::map` and `Object::keys`, as well as the `JSON` object.
+Mithril relies on some ECMAScript 5 features, namely: `Array::indexOf`, `Array::map` and `Object::keys`, as well as the `JSON` object. Internet Explorer 8 lacks native support for some of these features.
 
 The easiest way to polyfill these features is to include this script:
 
 ```javascript
-<script src="https://polyfill.io/"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.0.3/es5-shim.min.js"></script>
 ```
 
 This will provide all the polyfills required for the browser. You can alternatively include only specific polyfills:
 
 ```markup
-<script src="https://polyfill.io/readable/gimme(array.prototype.indexof,object.keys,function.prototype.bind,array.prototype.foreach,JSON)"></script>
+<script src="http://cdn.polyfill.io/v1/polyfill.min.js?features=Array.prototype.indexOf,Object.keys,Function.prototype.bind,Array.prototype.forEach,JSON"></script>
 ```
 
 You can also use other polyfills to support these features in IE7.

@@ -11,7 +11,7 @@
 
 This is a getter-setter factory utility. It returns a function that stores information.
 
-Note that modifying the values of `m.prop` getter-setters does not trigger redrawing. Instead, Mithril's redrawing system relies on [`m.startComputation` and `m.endComputation`](mithril.computation.md). These functions are internally called by Mithril when you initialize a module via [`m.module`](mithril.module.md) or [`m.route`](mithril.route.md), and when you trigger event handlers that were created within templates with [`m()`](mithril.md). 
+Note that modifying the values of `m.prop` getter-setters does not trigger redrawing. Instead, Mithril's redrawing system relies on [`m.startComputation` and `m.endComputation`](mithril.computation.md). These functions are internally called by Mithril when you initialize a component via [`m.mount`](mithril.mount.md) or [`m.route`](mithril.route.md), and when you trigger event handlers that were created within templates with [`m()`](mithril.md). 
 
 ---
 
@@ -31,16 +31,16 @@ name("Mary"); //Mary
 var b = name(); //b == "Mary"
 ```
 
-It can be used in conjunction with [`m.withAttr`](mithril.withattr.md) to implement data binding in the view-to-model direction and to provide uniform data access for model entity properties.
+It can be used in conjunction with [`m.withAttr`](mithril.withAttr.md) to implement data binding in the view-to-model direction and to provide uniform data access for model entity properties.
 
 ```javascript
 //a contrived example of bi-directional data binding
-var user = {
+var User = {
 	model: function(name) {
 		this.name = m.prop(name);
 	},
 	controller: function() {
-		this.user = new user.model("John Doe");
+		this.user = new User.model("John Doe");
 	},
 	view: function(controller) {
 		m.render("body", [
@@ -82,10 +82,16 @@ var users = m.prop(deferred.promise)
 users() // undefined
 
 deferred.resolve("Hello")
-users() // Hello
-users.then(function(value) {
-	console.log(value) //Hello
-})
+
+//wait for next tick for Q's A+ compliant promise to actually resolve
+setTimeout(function() {
+
+	users() // Hello
+	users.then(function(value) {
+		console.log(value) //Hello
+	})
+	
+}, 1000)
 ```
 
 ---

@@ -1,6 +1,6 @@
 //saucelabs reporting; see https://github.com/axemclion/grunt-saucelabs#test-result-details-with-qunit
+
 var log = []
-var testName
 
 QUnit.done(function (test_results) {
 	var tests = []
@@ -61,6 +61,22 @@ test('Mithril accessible as window.m', function() {
 	ok(window.m)
 })
 
+test('m.trust w/ html entities', function() {
+	expect(1)
+	var view1 = m('div', "a", m.trust("&amp;"), "b")
+
+	m.render(dummyEl, view1)
+	equal(dummyEl.innerHTML, '<div>a&amp;b</div>', 'view1 rendered correctly')
+})
+
+test('m.trust w/ html entities 2', function() {
+	expect(1)
+	var view1 = m('div', "a", m.trust("&amp;"), "b", m.trust("&amp;"), "c")
+
+	m.render(dummyEl, view1)
+	equal(dummyEl.innerHTML, '<div>a&amp;b&amp;c</div>', 'view1 rendered correctly')
+})
+
 test('array item removal', function() {
 	expect(2)
 	var view1 = m('div', {}, [
@@ -69,7 +85,7 @@ test('array item removal', function() {
 		m('div', {}, '2')
 	])
 
-	var view2= m('div', {}, [
+	var view2 = m('div', {}, [
 		m('div', {}, '0')
 	])
 
@@ -89,7 +105,7 @@ test('issue99 regression', function() {
 		m('div', {}, '2')
 	])
 
-	var view2= m('div', {}, [
+	var view2 = m('div', {}, [
 		m('span', {}, '0')
 	])
 
@@ -108,7 +124,7 @@ test('config handler context', function() {
 	}})
 	m.render(dummyEl, view)
 
-	var view = m('div', {config: function(evt, isInitialized, context) {
+	view = m('div', {config: function(evt, isInitialized, context) {
 		equal(context instanceof Object, true)
 		equal(context.data, 1)
 	}})
@@ -395,4 +411,27 @@ test('issue278 regression', function() {
 	}
 
 	equal(selected, 2)
+})
+test("mixing trusted content", function() {
+	m.render(dummyEl, [m.trust("<p>1</p><p>2</p>"), m("i", "foo")])
+	equal(dummyEl.childNodes[2].nodeName, "I")
+})
+test("mixing trusted content w/ text nodes", function() {
+	m.render(dummyEl, [m.trust("<p>1</p>123<p>2</p>"), m("i", "foo")])
+	equal(dummyEl.childNodes[3].nodeName, "I")
+})
+test("mixing trusted content w/ td", function() {
+	m.render(dummyEl, [m.trust("<td>1</td><td>2</td>"), m("i", "foo")])
+	equal(dummyEl.childNodes[1].nodeName, "I")
+})
+
+test("0 should not be treated as empty string", function() {
+	m.render(dummyEl, m("input", {value: ""}))
+	m.render(dummyEl, m("input", {value: 0}))
+	equal(dummyEl.childNodes[0].value, "0")
+})
+
+test("empty value in <option> should show as attribute", function() {
+	m.render(dummyEl, m("select", m("option", {value: ""}, "aaa")))
+	equal(dummyEl.childNodes[0].innerHTML, '<option value="">aaa</option>')
 })
